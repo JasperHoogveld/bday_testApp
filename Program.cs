@@ -16,7 +16,8 @@ internal partial class Program {
 public class MainMenu() {
   private List<Person>? _persons;
   private readonly Person _person = new();
-  private readonly string _jsonFile = "C:\\Projects\\Test_App\\bdays.json";
+  private static readonly string _path = Directory.GetCurrentDirectory();
+  private readonly string _jsonFile = Path.Combine(_path, "bdays.json");
   private readonly CultureInfo _culture = new("nl-NL");
   private readonly JsonSerializerOptions _options = new() { WriteIndented = true };
 
@@ -155,12 +156,6 @@ public class MainMenu() {
           }
           if (personToRemove != null) {
             _persons?.Remove(personToRemove);
-            //for (int i = 1; i < _persons?.Count; i++) {
-            //  foreach (Person person in _persons) {
-            //    person.RequestID = i;
-            //    i++;
-            //  }
-            //}
             WriteToJsonFile();
             Console.WriteLine(personToRemove.FirstName + " " + personToRemove.LastName + "'s birthday has been removed from the list");
           }
@@ -175,7 +170,6 @@ public class MainMenu() {
   }
 
   private void WriteToJsonFile() {
-    //string json = JsonSerializer.Serialize(_persons, _options);
     string json = JsonSerializer.Serialize(_persons, typeof(IEnumerable<IPerson>), _options);
     File.WriteAllText(_jsonFile, json);
   }
